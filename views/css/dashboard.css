@@ -1,0 +1,11 @@
+*{
+    margin: 0;
+}
+
+.chat {
+    border: 5px black solid;
+}
+
+.input{
+    width: 100%;
+}
