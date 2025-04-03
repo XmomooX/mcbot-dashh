@@ -48,7 +48,8 @@ app.get("/dashboard", async (req, res) => {
     }
 
     try {
-        bot = await botInfo();  
+        bot = await botInfo(); 
+        //console.log(bot) 
         bot.on("chat", (author, msg) => {
             console.log(author, msg);
             if (activeSocket) {
@@ -56,11 +57,12 @@ app.get("/dashboard", async (req, res) => {
             }
         });
 
+        
         const info = {
-            "username": bot.username,
-            "health": bot.health,
-            "food": bot.food,
-            "position": bot.position,
+            "username": bot.client.username,
+            "health": bot.client.health,
+            "food": bot.client.food,
+            "position": bot.client.position,
         }
 
         res.render("dashboard", { info: JSON.stringify(info), message: "Bot is ready!", author: bot.username });

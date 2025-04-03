@@ -11,11 +11,12 @@ const startBot = async (name, ip, port, version, res) => {
         version: version || false
     });
 
-    bot.on("connect", async () => {
+    bot.on("spawn", async () => {
         isSpawned = true;
-        console.log(`Bot spawned with username: ${bot.username}`);
+        console.log(`Bot spawned with username: ${bot.client.username}`);
+        console.log(bot.client.health)
         return res.redirect("/dashboard")
-    });//e
+    });
 
     bot.on("disconnect", () => {
         isSpawned = false;
@@ -44,13 +45,14 @@ const botInfo = async () => {
         return null;
     }
 
-    return bot.once("spawn", () => {
+    console.log(bot.health)
+    return bot.once("connect", () => {
         resolve({
-            username: bot.username,
-            position: bot.entity.position,
-            health: bot.health,
-            food: bot.food,
-            inventory: bot.inventory.items()
+            username: bot.client.username,
+            position: bot.client.entity.position,
+            health: bot.client.health,
+            food: bot.client.food,
+            inventory: bot.client.inventory.items()
         })
     })
 };
