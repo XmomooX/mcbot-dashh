@@ -2,6 +2,7 @@ const { EventEmitter } = require("events");
 const mc = require("minecraft-protocol");
 const versions = require("./versions");
 const { loadHealth } = require("./health");
+const { loadChat } = require("./chat");
 const bot = new EventEmitter();
 let auth;
 
@@ -21,12 +22,10 @@ const connect = (opt) => {
     spawnedBot.on("connect", () => {
         bot.emit("connect")
     });
-    loadHealth(bot, spawnedBot)
-    
 
-    spawnedBot.on("playerChat", (data) => {
-        bot.emit("chat", data.senderName.split("\"")[1], data.formattedMessage.split("\"")[1])
-    })
+    loadHealth(bot, spawnedBot)
+    loadChat(bot, spawnedBot)
+
     bot.on("death", () => respawn(bot))
     bot.disconnect = function (reason) {
         spawnedBot.end(reason ? reason : null)

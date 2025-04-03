@@ -28,7 +28,7 @@ io.on('connection', (socket) => {
     socket.on('send', (msgg) => {
         console.log("Received message:", msgg);
         if (bot) {
-            bot.chat(msgg);  
+            bot.sendMessage(msgg);  
          }
     });
 
