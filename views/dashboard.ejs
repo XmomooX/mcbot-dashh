@@ -30,8 +30,8 @@
             <script>
                 const chatdiv = document.getElementById("chatbord")
 
-                const socket = io({transports: ['websocket'], upgrade: false});
-                socket.on('message', (data) => {
+                const socket = io   ({transports: ['websocket'], upgrade: false});
+                socket.on('message', (author, content) => {
                     console.log(data)
                     const messageElement = document.createElement("p");
                     messageElement.classList.add("msg");
@@ -50,11 +50,11 @@
 
                     socket.emit('send', inputcontent.value);
 
-                    // const newpar = document.createElement("p");
-                    // newpar.textContent = "<%= author %>" + ": " + inputcontent.value;
-                    // newpar.classList.add("msg");
-                    // chatdiv.append(newpar);
-                    // chatdiv.scrollTop = chatdiv.scrollHeight;
+                    const newpar = document.createElement("p");
+                    newpar.textContent = "<%= author %>" + ": " + inputcontent.value;
+                    newpar.classList.add("msg");
+                    chatdiv.append(newpar);
+                    chatdiv.scrollTop = chatdiv.scrollHeight;
                     inputcontent.value = "";
                 });
 

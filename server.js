@@ -51,21 +51,22 @@ app.get("/dashboard", async (req, res) => {
         bot = await botInfo(); 
         //console.log(bot) 
         bot.on("chat", (author, msg) => {
+            if(author == bot.client.username) return
             console.log(author, msg);
             if (activeSocket) {
                 activeSocket.emit('message', { author, content: msg });
             }
         });
 
-        
         const info = {
             "username": bot.client.username,
             "health": bot.client.health,
             "food": bot.client.food,
             "position": bot.client.position,
+            "inv" : bot.inventory.items
         }
 
-        res.render("dashboard", { info: JSON.stringify(info), message: "Bot is ready!", author: bot.username });
+        res.render("dashboard", { info: JSON.stringify(info), message: "Bot is ready!", author: bot.client.username });
     } catch (error) {
         console.log("Error fetching bot info:", error);
         res.redirect("/");

@@ -1,8 +1,10 @@
 const { EventEmitter } = require("events");
 const mc = require("minecraft-protocol");
 const versions = require("./versions");
-const { loadHealth } = require("./health");
+const { loadHealth } = require("./functions/health");
 const { loadChat } = require("./chat");
+const { loadInventory, getHotBar } = require("./functions/inventory");
+const { readdir, readdirSync } = require("fs");
 const bot = new EventEmitter();
 let auth;
 
@@ -13,24 +15,57 @@ const connect = (opt) => {
     //if(opt.host == "localhost") return returnError("localhost is not allowed, use public IP");
     if (!opt.port) opt.port = "25565";
     if (!opt.auth && opt.username) auth = "offline"
-
-
+    
     const spawnedBot = mc.createClient(opt)
 
-    bot.client = spawnedBot
+    spawnedBot.on("connect", () => {
+        bot.emit("connect");
 
+        loadHealth(bot, spawnedBot);
+        loadChat(bot, spawnedBot);
+        loadInventory(spawnedBot, bot, opt.version);
+
+        readdir("./bot/functions", (err, files) => {
+            if (err) throw err;
+        
+            const functionNames = files
+                .filter(file => file.endsWith(".js"))
+                .map(file => file.replace(".js", ""));
+        
+            const loaded = new Set();
+        
+            functionNames.forEach(fn => {
+                const eventName = `loaded_${fn}`;
+                bot.once(eventName, () => {
+                    console.log("Loaded", fn, "functionality");
+                    loaded.add(fn);
+        
+                    if (loaded.size === functionNames.length) {
+                        console.log("All functionality loaded. Emitting spawn...");
+                        bot.emit("spawn");
+                    }
+                });
+            });
+        });
+        
+        // bot.once('loaded_inventory', () => {
+        //     bot.once("loaded_health", () => {
+        //     })
+        // });
+    });
+
+    bot.client = spawnedBot
+    bot.on("spawn", () => console.log("spawned"))
     spawnedBot.on("connect", () => {
         bot.emit("connect")
     });
-
-    loadHealth(bot, spawnedBot)
-    loadChat(bot, spawnedBot)
 
     bot.on("death", () => respawn(bot))
     bot.disconnect = function (reason) {
         spawnedBot.end(reason ? reason : null)
         bot.emit("disconnect", reason)
     }
+
     return bot;
 }
 

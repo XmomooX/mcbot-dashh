@@ -1,9 +1,11 @@
+const { loadChat } = require("../chat");
+
 const loadHealth = (bot, spawnedbot)=>{
     spawnedbot.once("update_health", (p) => {
         if (p.health > 0) {
             bot.client.health = p.health;
             bot.client.food = p.food
-            bot.emit("spawn")
+            bot.emit("loaded_health")
         }
     })
     spawnedbot.on("update_health", (p) => {
