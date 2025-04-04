@@ -9,7 +9,7 @@ const server = http.createServer(app);
 const io = socketIo(server);
 
 app.use(cors({
-    origin: 'http://localhost:3000' // Replace with the actual origin of your React app
+    origin: 'http://localhost:3000'
 }));
 app.set("view engine", "ejs");
 app.set("views", __dirname + '/views');
@@ -19,7 +19,7 @@ app.use(express.urlencoded({ extended: true }));
 
 let botInitialized = false;
 let bot = null;
-let botChatListenerAdded = false; // Add this flag
+let botChatListenerAdded = false; 
 
 io.on('connection', (socket) => {
     socket.on('send', (msgg) => {
@@ -46,7 +46,7 @@ io.on('connection', (socket) => {
 
 app.get("/dashboard", async (req, res) => {
     if (!botInitialized) {
-        return res.render("loading", { message: "Bot is initializing, please wait..." });
+        return res.redirect("http://localhost:3000/")
     }
 
     try {
@@ -77,7 +77,8 @@ app.post("/startbot", async (req, res) => {
             req.body.serverIP,
             req.body.serverPort,
             req.body.serverVersion,
-            res
+            res,
+            io
         ).then(() => {
             botInitialized = true;
             console.log("init");

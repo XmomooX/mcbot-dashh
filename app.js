@@ -2,13 +2,14 @@ const { connect } = require("./bot/bot")
 let bot;
 let isSpawned = false;
 
-const startBot = async (name, ip, port, version, res) => {
+const startBot = async (name, ip, port, version, res, socket) => {
     bot = connect({
         username: name,
         auth: "offline",
         host: ip,
         port: port || "25565",
-        version: version || false
+        version: version || false,
+        socket
     });
 
     bot.on("spawn", async () => {

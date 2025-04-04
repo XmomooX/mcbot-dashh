@@ -1,0 +1,140 @@
+/* Dashboard.css */
+
+.dashboard-container {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #313d52;
+  color: #f0f4f8;
+  min-height: 100vh;
+  padding: 40px 20px;
+  display: flex;
+  justify-content: center;
+  align-items: start;
+}
+
+.dashboard-main {
+  width: 100%;
+  max-width: 800px;
+  background-color: #3e4a63;
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+}
+
+.dashboard-title {
+  font-size: 32px;
+  margin-bottom: 24px;
+  color: #ffffff;
+}
+
+.dashboard-subtitle {
+  font-size: 20px;
+  margin-bottom: 12px;
+  color: #ffffff;
+}
+
+.bot-info-wrapper {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.bot-info {
+  width: 10vw;
+  background-color: #2b3445;
+  padding: 16px;
+  border-radius: 8px;
+  overflow-x: auto;
+  color: #e0e0e0;
+  font-size: 14px;
+  margin: 0;
+}
+
+
+.bot-status {
+  font-size: 16px;
+  margin-bottom: 24px;
+}
+
+.chat-container {
+  margin-top: 20px;
+  margin-bottom: 24px;
+  background-color: #2b3445;
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.chat-messages {
+  height: 250px;
+  overflow-y: auto;
+  background-color: #1f2735;
+  border-radius: 8px;
+  padding: 10px;
+  border: 1px solid #444;
+}
+
+.chat-message {
+  margin: 6px 0;
+  padding: 8px 12px;
+  background-color: #45597a;
+  border-radius: 8px;
+  color: #ffffff;
+  word-wrap: break-word;
+  font-size: 14px;
+}
+
+.chat-input-container {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.chat-input {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  background-color: #586b8a;
+  color: #ffffff;
+  font-size: 14px;
+}
+
+.chat-input::placeholder {
+  color: #cbd5e1;
+}
+
+.send-button {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  background-color: #4f90ff;
+  color: #ffffff;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.send-button:hover {
+  background-color: #3a6fdb;
+}
+
+.stopbot-form {
+  margin-top: 20px;
+}
+
+.stopbot-button {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  background-color: #ff5f5f;
+  color: #ffffff;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.stopbot-button:hover {
+  background-color: #d84747;
+}

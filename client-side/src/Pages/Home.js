@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Navigate } from "react-router-dom";
+import "./css/Home.css"
 
 export function Home() {
     const [formData, setFormData] = useState({
@@ -37,7 +38,6 @@ export function Home() {
             console.log("Server response:", result);
 
             if (result.redirectUrl) {
-                // Extract correct path from redirectUrl
                 const cleanPath = result.redirectUrl.replace("http://localhost:3000", "").replace(/^\/?#\/?/, "/");
                 setNavigationPath(cleanPath);
                 setShouldNavigate(true);
@@ -58,40 +58,42 @@ export function Home() {
             <meta charSet="UTF-8" />
             <meta name="viewport" content="width=device-width, initial-scale=1.0" />
             <title>Home</title>
-            <form onSubmit={handleSubmit}>
-                <input
-                    name="botname"
-                    placeholder="Bot name"
-                    className="nameInp"
-                    required
-                    value={formData.botname}
-                    onChange={handleChange}
-                />
-                <input
-                    name="serverIP"
-                    placeholder="Server IP"
-                    className="ip"
-                    required
-                    value={formData.serverIP}
-                    onChange={handleChange}
-                />
-                <input
-                    name="serverPort"
-                    placeholder="Server port, Leave empty for default"
-                    className="port"
-                    value={formData.serverPort}
-                    onChange={handleChange}
-                />
-                <input
-                    name="serverVersion"
-                    placeholder="Server version"
-                    className="version"
-                    required
-                    value={formData.serverVersion}
-                    onChange={handleChange}
-                />
-                <button type="submit">Join</button>
-            </form>
+            <div className="main">
+                <form onSubmit={handleSubmit} className="form">
+                    <input
+                        name="botname"
+                        placeholder="Bot name"
+                        className="nameInp"
+                        required
+                        value={formData.botname}
+                        onChange={handleChange}
+                    />
+                    <input
+                        name="serverIP"
+                        placeholder="Server IP"
+                        className="ip"
+                        required
+                        value={formData.serverIP}
+                        onChange={handleChange}
+                    />
+                    <input
+                        name="serverPort"
+                        placeholder="Server port, Leave empty for default"
+                        className="port"
+                        value={formData.serverPort}
+                        onChange={handleChange}
+                    />
+                    <input
+                        name="serverVersion"
+                        placeholder="Server version"
+                        className="version"
+                        required
+                        value={formData.serverVersion}
+                        onChange={handleChange}
+                    />
+                    <button type="submit" className="submitform">Join</button>
+                </form>
+            </div>
         </>
     );
 }

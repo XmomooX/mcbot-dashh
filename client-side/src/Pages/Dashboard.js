@@ -1,8 +1,10 @@
 import { useEffect, useState, useRef } from "react";
 import io from "socket.io-client";
-
+import "./css/Dashboard.css"
 export function Dashboard() {
     const [messages, setMessages] = useState([]);
+    const [health, setHealth] = useState(undefined)
+    const [food, setFood] = useState(undefined)
     const [input, setInput] = useState("");
     const [botInfo, setBotInfo] = useState(null);
     const chatbordRef = useRef(null);
@@ -26,6 +28,12 @@ export function Dashboard() {
             setMessages((prev) => [...prev, `${data.author}: ${data.content}`]);
         });
 
+        socket.on("health", data => {
+            setHealth(data)
+        })
+        socket.on("food", data => {
+            setFood(data)
+        })
         return () => {
             socket.disconnect();
         };
@@ -45,39 +53,51 @@ export function Dashboard() {
     return (
         <>
             <link rel="stylesheet" href="css/dashboard.css" />
-            <h1>Dashboard</h1>
+            <div className="dashboard-container">
+                <div className="dashboard-main">
+                    <h1 className="dashboard-title">Dashboard</h1>
 
-            {botInfo ? (
-                <>
-                    <h2>Bot Information</h2>
-                    <pre>{JSON.stringify(botInfo, null, 2)}</pre>
-                </>
-            ) : (
-                <p>Bot is not available right now.</p>
-            )}
+                    {botInfo ? (
+                        <>
+                            <div className="bot-info-container">
+                                <h2 className="dashboard-subtitle">Bot Information</h2>
+                                <div className="bot-info-wrapper">
+                                    <pre className="bot-info">Username: {botInfo.username}</pre>
+                                    <pre className="bot-info">Health: {health ? health : botInfo.health}</pre>
+                                    <pre className="bot-info">Food: {food ? food : botInfo.food}</pre>
+                                    <pre className="bot-info">inv: {botInfo.inventory}</pre>
+                                </div>
+                            </div>
+                        </>
+                    ) : (
+                        <p className="bot-status">Bot is not available right now.</p>
+                    )}
 
-            <div className="chat" id="chat">
-                <div className="chatbord" id="chatbord" ref={chatbordRef}>
-                    {messages.map((msg, index) => (
-                        <p key={index} className="msg">{msg}</p>
-                    ))}
-                </div>
+                    <div className="chat-container">
+                        <div className="chat-messages" ref={chatbordRef}>
+                            {messages.map((msg, index) => (
+                                <p key={index} className="chat-message">{msg}</p>
+                            ))}
+                        </div>
 
-                <div className="input">
-                    <input
-                        type="text"
-                        placeholder="enter your message"
-                        className="msginput"
-                        value={input}
-                        onChange={(e) => setInput(e.target.value)}
-                    />
-                    <button onClick={sendMessage}>Send</button>
+                        <div className="chat-input-container">
+                            <input
+                                type="text"
+                                placeholder="enter your message"
+                                className="chat-input"
+                                value={input}
+                                onChange={(e) => setInput(e.target.value)}
+                            />
+                            <button className="send-button" onClick={sendMessage}>Send</button>
+                        </div>
+                    </div>
+
+                    <form className="stopbot-form" action="/stopbot" method="POST">
+                        <button type="submit" className="stopbot-button">Stop Bot</button>
+                    </form>
                 </div>
             </div>
 
-            <form action="/stopbot" method="POST">
-                <button type="submit">Stop Bot</button>
-            </form>
         </>
     );
 }

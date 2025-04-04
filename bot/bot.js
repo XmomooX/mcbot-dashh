@@ -21,7 +21,7 @@ const connect = (opt) => {
     spawnedBot.on("connect", () => {
         bot.emit("connect");
 
-        loadHealth(bot, spawnedBot);
+        loadHealth(bot, spawnedBot, opt.socket);
         loadChat(bot, spawnedBot);
         loadInventory(spawnedBot, bot, opt.version);
 
@@ -47,11 +47,6 @@ const connect = (opt) => {
                 });
             });
         });
-        
-        // bot.once('loaded_inventory', () => {
-        //     bot.once("loaded_health", () => {
-        //     })
-        // });
     });
 
     bot.client = spawnedBot
