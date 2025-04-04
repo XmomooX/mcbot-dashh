@@ -15,7 +15,7 @@ const startBot = async (name, ip, port, version, res) => {
         isSpawned = true;
         console.log(`Bot spawned with username: ${bot.client.username}`);
         console.log(bot.client.health)
-        return res.redirect("/dashboard")
+        return res.redirect("http://localhost:3000/#dashboard")
     });
 
     bot.on("disconnect", () => {

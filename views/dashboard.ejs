@@ -31,7 +31,7 @@
                 const chatdiv = document.getElementById("chatbord")
 
                 const socket = io   ({transports: ['websocket'], upgrade: false});
-                socket.on('message', (author, content) => {
+                socket.on('message', (data) => {
                     console.log(data)
                     const messageElement = document.createElement("p");
                     messageElement.classList.add("msg");
