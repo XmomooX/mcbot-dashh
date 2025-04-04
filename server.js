@@ -8,7 +8,9 @@ const cors = require("cors");
 const server = http.createServer(app);
 const io = socketIo(server);
 
-app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:3000' // Replace with the actual origin of your React app
+}));
 app.set("view engine", "ejs");
 app.set("views", __dirname + '/views');
 app.use(express.static(__dirname + '/views'));
@@ -31,13 +33,13 @@ io.on('connection', (socket) => {
         console.log('chat socket disconnected');
     });
 
-    if(bot && !botChatListenerAdded){ 
+    if (bot && !botChatListenerAdded) {
         bot.on("chat", (author, msg) => {
             if (author == bot.client.username) return
             console.log(author, msg);
             io.emit('message', { author, content: msg });
         });
-        botChatListenerAdded = true; 
+        botChatListenerAdded = true;
     }
 
 });
@@ -48,7 +50,7 @@ app.get("/dashboard", async (req, res) => {
     }
 
     try {
-        if (!bot) { 
+        if (!bot) {
             bot = await botInfo();
         }
 
@@ -68,9 +70,32 @@ app.get("/dashboard", async (req, res) => {
 });
 
 app.post("/startbot", async (req, res) => {
+    console.log(req.body);
     if (!botInitialized) {
-        startBot("yeye", "localhost", "25565", "1.21.1", res).then(() => {
+        startBot(
+            req.body.botname,
+            req.body.serverIP,
+            req.body.serverPort,
+            req.body.serverVersion,
+            res
+        ).then(() => {
             botInitialized = true;
+            console.log("init");
+        }).catch((error) => {
+            console.error("Error starting bot:", error);
+            res.status(500).json({
+                success: false,
+                code: 500,
+                error: "Failed to start bot.",
+                details: error.message || error,
+            });
+        });
+    } else {
+        res.json({
+            success: true,
+            code: 200,
+            message: "Bot is already initialized.",
+            redirectUrl: "http://localhost:3000/dashboard"
         });
     }
 });
@@ -78,8 +103,8 @@ app.post("/startbot", async (req, res) => {
 app.post("/stopbot", async (req, res) => {
     await stopBot();
     botInitialized = false;
-    bot = null; 
-    botChatListenerAdded = false; 
+    bot = null;
+    botChatListenerAdded = false;
     res.redirect("/");
 });
 
