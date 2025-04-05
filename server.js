@@ -101,7 +101,7 @@ app.post("/createbot", (req, res) => {
 })
 
 app.post("/startbot", (req, res) => {
-    if(!serverport) serverport = "25565 "
+    if(!serverport) serverport = "25565"
     if (
         !botname ||
         !serverip ||

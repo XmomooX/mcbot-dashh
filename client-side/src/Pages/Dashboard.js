@@ -73,14 +73,31 @@ export function Dashboard() {
                             </form>
                         </>
                     ) : (
-                        <>
-                            <form className="startbot-form" action={`${serverURL}/startbot`} method="POST">
-                                <button type="submit" className="startbot-button" onClick={() => {
-                                    setTimeout(() => {
-                                        window.location.reload();
-                                    }, 5000);
-                                }}>Start</button>
-                            </form>
+                        <>                                <button
+                            className="startbot-button"
+                            onClick={async (e) => {
+                                e.preventDefault();
+                                try {
+                                    const res = await fetch(`${serverURL}/startbot`, {
+                                        method: "POST",
+                                        headers: { "Content-Type": "application/json" },
+                                    });
+
+                                    const data = await res.json();
+                                    if (data.redirectUrl) {
+                                        window.location.href = data.redirectUrl;
+                                    } else {
+                                        setTimeout(() => {
+                                            window.location.reload();
+                                        }, 3000);
+                                    }
+                                } catch (err) {
+                                    console.error("Failed to start bot:", err);
+                                }
+                            }}
+                        >
+                            Start
+                        </button>
                         </>
                     )}
 
