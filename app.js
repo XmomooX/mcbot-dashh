@@ -16,12 +16,6 @@ const startBot = async (name, ip, port, version, res, socket) => {
         isSpawned = true;
         console.log(`Bot spawned with username: ${bot.client.username}`);
         console.log(bot.client.health)
-        res.json({
-            success: true,
-            code: 200,
-            message: "Bot started successfully!",
-            redirectUrl: "/#dashboard" // Send the redirect URL in the JSON
-        });
     });
 
     bot.on("disconnect", () => {
@@ -52,15 +46,7 @@ const botInfo = async () => {
     }
 
     console.log(bot.health)
-    return bot.once("connect", () => {
-        resolve({
-            username: bot.client.username,
-            position: bot.client.entity.position,
-            health: bot.client.health,
-            food: bot.client.food,
-            inventory: bot.client.inventory.items()
-        })
-    })
+    return bot
 };
 
 const botStatus = () => {

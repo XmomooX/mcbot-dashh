@@ -11,6 +11,7 @@ export function Home() {
     });
     const [shouldNavigate, setShouldNavigate] = useState(false);
     const [navigationPath, setNavigationPath] = useState("");
+    const serverURL = "http://localhost:4000"
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -20,7 +21,7 @@ export function Home() {
         e.preventDefault();
 
         try {
-            const response = await fetch("http://localhost:4000/startbot", {
+            const response = await fetch(`${serverURL}/createbot`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -38,7 +39,9 @@ export function Home() {
             console.log("Server response:", result);
 
             if (result.redirectUrl) {
-                const cleanPath = result.redirectUrl.replace("http://localhost:3000", "").replace(/^\/?#\/?/, "/");
+                const cleanPath = result.redirectUrl
+                    .replace(window.location.origin, "")
+                    .replace(/^\/?#\/?/, "/");
                 setNavigationPath(cleanPath);
                 setShouldNavigate(true);
             }
@@ -91,7 +94,7 @@ export function Home() {
                         value={formData.serverVersion}
                         onChange={handleChange}
                     />
-                    <button type="submit" className="submitform">Join</button>
+                    <button type="submit" className="submitform">Create bot</button>
                 </form>
             </div>
         </>

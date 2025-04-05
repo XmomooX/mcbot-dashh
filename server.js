@@ -8,8 +8,9 @@ const cors = require("cors");
 const server = http.createServer(app);
 const io = socketIo(server);
 
+const clientURL = "http://localhost:3000"
 app.use(cors({
-    origin: 'http://localhost:3000'
+    origin: clientURL
 }));
 app.set("view engine", "ejs");
 app.set("views", __dirname + '/views');
@@ -19,8 +20,12 @@ app.use(express.urlencoded({ extended: true }));
 
 let botInitialized = false;
 let bot = null;
-let botChatListenerAdded = false; 
+let botname;
+let serverip;
+let serverport = "25565";
+let serverversion;
 
+let botChatListenerAdded = false;
 io.on('connection', (socket) => {
     socket.on('send', (msgg) => {
         console.log("Received message:", msgg);
@@ -46,7 +51,7 @@ io.on('connection', (socket) => {
 
 app.get("/dashboard", async (req, res) => {
     if (!botInitialized) {
-        return res.redirect("http://localhost:3000/")
+        return res.redirect(clientURL)
     }
 
     try {
@@ -69,14 +74,51 @@ app.get("/dashboard", async (req, res) => {
     }
 });
 
-app.post("/startbot", async (req, res) => {
-    console.log(req.body);
+app.post("/createbot", (req, res) => {
+    console.log("createbot")
+    if (
+        !req.body.botname ||
+        !req.body.serverIP ||
+        !req.body.serverVersion
+    ) {
+        console.log(req.body)
+        console.log("error")
+        return "Error"
+    }
+
+    botname = req.body.botname
+    serverip = req.body.serverIP
+    serverport = req.body.serverPort
+    serverversion = req.body.serverVersion
+
+    console.log(botname, serverip, serverport, serverversion)
+    res.json({
+        success: true,
+        code: 200,
+        message: "Bot started successfully!",
+        redirectUrl: "/#dashboard"
+    });
+})
+
+app.post("/startbot", (req, res) => {
+    if(!serverport) serverport = "25565"
+    if (
+        !botname ||
+        !serverip ||
+        !serverversion
+    ) {
+        console.log(botname, serverip, serverport, serverversion)
+        console.log("error")
+        return "Error"
+    }
+
     if (!botInitialized) {
+        console.log("Not initializing, starting..")
         startBot(
-            req.body.botname,
-            req.body.serverIP,
-            req.body.serverPort,
-            req.body.serverVersion,
+            botname,
+            serverip,
+            serverport,
+            serverversion,
             res,
             io
         ).then(() => {
@@ -96,7 +138,7 @@ app.post("/startbot", async (req, res) => {
             success: true,
             code: 200,
             message: "Bot is already initialized.",
-            redirectUrl: "http://localhost:3000/dashboard"
+            redirectUrl: `${clientURL}/dashboard`
         });
     }
 });
@@ -106,7 +148,7 @@ app.post("/stopbot", async (req, res) => {
     botInitialized = false;
     bot = null;
     botChatListenerAdded = false;
-    res.redirect("/");
+    res.redirect(`${clientURL}/`);
 });
 
 server.listen(4000, () => {

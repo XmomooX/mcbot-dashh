@@ -9,9 +9,9 @@ export function Dashboard() {
     const [botInfo, setBotInfo] = useState(null);
     const chatbordRef = useRef(null);
     const socketRef = useRef(null);
-
+    const serverURL = "http://localhost:4000"
     useEffect(() => {
-        fetch("http://localhost:4000/dashboard")
+        fetch(`${serverURL}/dashboard`)
             .then((res) => res.json())
             .then((data) => {
                 if (data.info) {
@@ -20,7 +20,7 @@ export function Dashboard() {
             })
             .catch((err) => console.error("Error fetching bot info:", err));
 
-        const socket = io("http://localhost:4000", { transports: ['websocket'], upgrade: false });
+        const socket = io(serverURL, { transports: ['websocket'], upgrade: false });
         socketRef.current = socket;
 
         socket.on("message", (data) => {
@@ -68,9 +68,20 @@ export function Dashboard() {
                                     <pre className="bot-info">inv: {botInfo.inventory}</pre>
                                 </div>
                             </div>
+                            <form className="stopbot-form" action={`${serverURL}/stopbot`} method="POST">
+                                <button type="submit" className="stopbot-button">Stop</button>
+                            </form>
                         </>
                     ) : (
-                        <p className="bot-status">Bot is not available right now.</p>
+                        <>
+                            <form className="startbot-form" action={`${serverURL}/startbot`} method="POST">
+                                <button type="submit" className="startbot-button" onClick={() => {
+                                    setTimeout(() => {
+                                        window.location.reload();
+                                    }, 5000);
+                                }}>Start</button>
+                            </form>
+                        </>
                     )}
 
                     <div className="chat-container">
@@ -91,10 +102,6 @@ export function Dashboard() {
                             <button className="send-button" onClick={sendMessage}>Send</button>
                         </div>
                     </div>
-
-                    <form className="stopbot-form" action="/stopbot" method="POST">
-                        <button type="submit" className="stopbot-button">Stop Bot</button>
-                    </form>
                 </div>
             </div>
 
