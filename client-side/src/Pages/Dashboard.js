@@ -9,7 +9,7 @@ export function Dashboard() {
     const [botInfo, setBotInfo] = useState(null);
     const chatbordRef = useRef(null);
     const socketRef = useRef(null);
-    const serverURL = "http://localhost:4000"
+    const serverURL = "https://mcbot-dashh.onrender.com"
     useEffect(() => {
         fetch(`${serverURL}/dashboard`)
             .then((res) => res.json())

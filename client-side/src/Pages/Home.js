@@ -11,7 +11,7 @@ export function Home() {
     });
     const [shouldNavigate, setShouldNavigate] = useState(false);
     const [navigationPath, setNavigationPath] = useState("");
-    const serverURL = "http://localhost:4000"
+    const serverURL = "https://mcbot-dashh.onrender.com"
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });

@@ -8,7 +8,7 @@ const cors = require("cors");
 const server = http.createServer(app);
 const io = socketIo(server);
 
-const clientURL = "http://localhost:3000"
+const clientURL = "https://aesthetic-pastelito-9ad0f9.netlify.app"
 app.use(cors({
     origin: clientURL
 }));
@@ -101,7 +101,7 @@ app.post("/createbot", (req, res) => {
 })
 
 app.post("/startbot", (req, res) => {
-    if(!serverport) serverport = "25565"
+    if(!serverport) serverport = "25565 "
     if (
         !botname ||
         !serverip ||
