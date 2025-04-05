@@ -111,7 +111,7 @@ app.post("/startbot", (req, res) => {
         console.log("error")
         return "Error"
     }
-
+//test commit 
     if (!botInitialized) {
         console.log("Not initializing, starting..")
         startBot(
